@@ -2,42 +2,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.hashers import make_password
 from .models import User
 from django.db import IntegrityError
 from rest_framework import status
+from .serializers import RegisterSerializer 
 
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        data = request.data
-        email = data.get("email")
-        password = data.get("password")
-        role = data.get("role", "bronze")
-
-        if not email or not password:
-            return Response(
-                {"error": "Email and password are required"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if User.objects.filter(email=email).exists():
-            return Response(
-                {"error": "User with this email already exists"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        user = User.objects.create(
-            email=email,
-            role=role,
-            password=make_password(password),
-        )
-
-        return Response(
-            {"message": "User registered successfully"}, status=status.HTTP_201_CREATED
-        )
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -59,4 +38,3 @@ class LogoutView(APIView):
     def post(self, request):
         logout(request)
         return Response({"message": "Logged out successfully"})
-    
