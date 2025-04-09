@@ -1,3 +1,15 @@
+# version: '3.9'
+
+# services:
+#   web:
+#     build: .
+#     container_name: django-middleware
+#     ports:
+#       - "8000:8000"
+#     volumes:
+#       - .:/app
+#     command: python manage.py runserver 0.0.0.0:8000
+
 version: '3.9'
 
 services:
@@ -7,5 +19,35 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
-    command: python manage.py runserver 0.0.0.0:8000
+      - .:/code
+    depends_on:
+      - db
+      - redis
+    command: ./wait-for-it.sh db:5432 -- ./wait-for-it.sh redis:6379 -- python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
