@@ -25,3 +25,4 @@ class IPLoggingMiddleware:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         logging.info(f"IP: {ip} | Time: {timestamp}")
         return self.get_response(request)
+    

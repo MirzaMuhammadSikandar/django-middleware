@@ -1,46 +1,3 @@
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework.permissions import AllowAny, IsAuthenticated
-# from django.contrib.auth import authenticate, login, logout
-# from .models import User
-# from django.contrib.auth.hashers import make_password
-# from rest_framework import status
-
-
-# class RegisterView(APIView):
-#     permission_classes = [AllowAny]
-
-#     def post(self, request):
-#         data = request.data
-#         user = User.objects.create(
-#             email=data["email"],
-#             role=data.get("role", "bronze"),
-#             password=make_password(data["password"]),
-#         )
-#         return Response({"message": "User registered successfully"}, status=201)
-
-
-# class LoginView(APIView):
-#     permission_classes = [AllowAny]
-
-#     def post(self, request):
-#         email = request.data.get("email")
-#         password = request.data.get("password")
-#         user = authenticate(request, email=email, password=password)
-#         if user:
-#             login(request, user)
-#             return Response({"message": "Login successful"})
-#         return Response({"error": "Invalid credentials"}, status=400)
-
-
-# class LogoutView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         logout(request)
-#         return Response({"message": "Logged out successfully"})
-
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -102,3 +59,4 @@ class LogoutView(APIView):
     def post(self, request):
         logout(request)
         return Response({"message": "Logged out successfully"})
+    

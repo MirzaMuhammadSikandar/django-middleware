@@ -38,3 +38,4 @@ class AuthViewTest(TestCase):
 
         logout_response = self.client.post("/api/logout/")
         self.assertEqual(logout_response.status_code, 200)
+        
