@@ -7,19 +7,17 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/code
-      #local code synchronized with docker code
+      - .:/code  # Local code synchronized with Docker code
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy  # Wait until the database is healthy
       redis:
-        condition: service_healthy
-    command: python manage.py runserver 0.0.0.0:8000
+        condition: service_healthy  # Wait until Redis is healthy
     environment:
       - DB_NAME=mydb
       - DB_USER=myuser
       - DB_PASSWORD=mypassword
-      - DB_HOST=db
+      - DB_HOST=db  # The service name of your db container
       - DB_PORT=5432
       - REDIS_HOST=redis
 
@@ -34,7 +32,6 @@ services:
       POSTGRES_PASSWORD: mypassword
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      #mounts data from postges_data to container, data is not lost when the container stops or is deleted
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
       interval: 5s
@@ -53,4 +50,4 @@ services:
 
 volumes:
   postgres_data:
-  
+

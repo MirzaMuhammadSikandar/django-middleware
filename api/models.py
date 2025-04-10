@@ -8,6 +8,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="bronze")
     email = models.EmailField(unique=True)
 
+    username = None
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [] 
 
