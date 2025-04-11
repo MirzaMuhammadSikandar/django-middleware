@@ -35,3 +35,4 @@ class IPLoggingMiddlewareTest(TestCase):
             logs = f.read()
 
         self.assertIn("127.0.0.1", logs)
+        
