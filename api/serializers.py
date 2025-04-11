@@ -20,3 +20,4 @@ class ItemSerializer(serializers.ModelSerializer):
         model = Item
         fields = ['id', 'name', 'user']
         read_only_fields = ['id', 'user']  
+        

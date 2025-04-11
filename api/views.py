@@ -8,11 +8,11 @@ from .serializers import UserSerializer, ItemSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-@method_decorator(csrf_exempt, name='dispatch')
 class UserViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
     # @action decorators are used to create custom actions like register, login, and logout.
+    # @method_decorator(csrf_exempt)
     @action(detail=False, methods=['post'], permission_classes=[AllowAny])
     def register(self, request):
         serializer = UserSerializer(data=request.data)
@@ -20,7 +20,8 @@ class UserViewSet(viewsets.ViewSet):
             serializer.save()
             return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    # @method_decorator(csrf_exempt)
     @action(detail=False, methods=['post'], permission_classes=[AllowAny])
     def login(self, request):
         email = request.data.get("email")

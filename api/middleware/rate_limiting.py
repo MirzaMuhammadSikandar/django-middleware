@@ -12,7 +12,8 @@ class UserRole(Enum):
 
 
 class SkipPaths(Enum):
-    REGISTER = "/api/register/"
+    REGISTER = "/api/users/register/"
+    LOGIN = "/api/users/login/"
     ADMIN_LOGIN = "/admin/login/"
     ADMIN = "/admin/"
 
@@ -32,7 +33,7 @@ class RateLimitingMiddleware:
     def __call__(self, request):
         print("-- RateLimitingMiddleware triggered --")  
 
-        if request.path in {path.value for path in SkipPaths}:
+        if any(request.path.startswith(path.value) for path in SkipPaths):
             print("Skipping rate limiting for:", request.path)
             return self.get_response(request)
 

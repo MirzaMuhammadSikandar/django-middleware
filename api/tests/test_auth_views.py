@@ -1,7 +1,6 @@
 from django.test import TestCase, Client, override_settings
 from api.models import User
 
-
 @override_settings(
     MIDDLEWARE=[
         "django.middleware.security.SecurityMiddleware",
@@ -10,6 +9,7 @@ from api.models import User
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
+        "api.middleware.IPLoggingMiddleware",
     ]
 )
 class AuthViewTest(TestCase):
@@ -23,19 +23,19 @@ class AuthViewTest(TestCase):
 
     def test_register(self):
         response = self.client.post(
-            "/api/register/", self.user_data, content_type="application/json"
+            "/api/users/register/", self.user_data, content_type="application/json"
         )
         self.assertEqual(response.status_code, 201)
 
     def test_login_logout(self):
         self.client.post(
-            "/api/register/", self.user_data, content_type="application/json"
+            "/api/users/register/", self.user_data, content_type="application/json"
         )
         login_response = self.client.post(
-            "/api/login/", self.user_data, content_type="application/json"
+            "/api/users/login/", self.user_data, content_type="application/json"
         )
         self.assertEqual(login_response.status_code, 200)
 
-        logout_response = self.client.post("/api/logout/")
+        logout_response = self.client.post("/api/users/logout/")
         self.assertEqual(logout_response.status_code, 200)
-        
+
